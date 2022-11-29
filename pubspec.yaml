@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   m3u_nullsafe: ^1.0.4
   file_picker: ^4.6.1
+  get_storage: ^2.0.3
 
 dev_dependencies:
   flutter_test:
