@@ -1,0 +1,53 @@
+name: Android CI
+
+env:
+  main_project_module: app
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      # Set Current Date As Env Variable
+      - name: Set current date as env variable
+        run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
+      # Set Repository Name As Env Variable
+      - name: Set repository name as env variable
+        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: "oracle"
+          cache: "gradle"
+
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.7"
+          channel: "stable"
+          cache: true
+
+      - name: Get Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK RELEASE - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) debug generated
+          path: build/app/outputs/apk/release/app-release.apk
