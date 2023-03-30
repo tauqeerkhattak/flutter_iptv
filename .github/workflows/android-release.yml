@@ -29,11 +29,11 @@ jobs:
 
       - name: Replace string
         id: replace_string
-        uses: frabert/replace-string-action@v2.4
+        uses: mad9000/actions-find-and-replace-string@3
         with:
-          pattern: "\\"
-          string: "${{ steps.android_keystore.outputs.filePath }}"
-          replace-with: "/"
+          source: ${{ steps.android_keystore.outputs.filePath }}
+          find: '\'        # we want to remove ref/heads/ from source
+          replace: '\\'
 
       - name: Create key.properties
         run: |
