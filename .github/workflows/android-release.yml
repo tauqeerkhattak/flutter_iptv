@@ -28,10 +28,10 @@ jobs:
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: Replace string
+        id: replace_string
         uses: frabert/replace-string-action@v2.4
         with:
           pattern: "\\"
-          id: replace_string
           string: "${{ steps.android_keystore.outputs.filePath }}"
           replace-with: "/"
 
