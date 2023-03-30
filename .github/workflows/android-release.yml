@@ -20,9 +20,19 @@ jobs:
       - name: Set current date as env variable
         run: echo "date_today=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
-      # Set Repository Name As Env Variable
-      - name: Set repository name as env variable
-        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+      - name: Download Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: upload-keystore.jks
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+
+        - name: Create key.properties
+          run: |
+            echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+            echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+            echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+            echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
 
       - name: Set Up JDK
         uses: actions/setup-java@v3
@@ -46,7 +56,7 @@ jobs:
 
       # Upload Artifact Build
       # Noted For Output [main_project_module]/build/outputs/apk/debug/
-      - name: Upload APK RELEASE - ${{ env.repository_name }}
+      - name: Upload APK RELEASE
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) debug generated
