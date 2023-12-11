@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'screens/home.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init('channels_storage');
   runApp(const FlutterIPTV());
 }
 

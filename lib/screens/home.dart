@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_iptv/screens/video_screen/video_screen.dart';
 import 'package:flutter_iptv/services/storage_service.dart';
 import 'package:m3u_nullsafe/m3u_nullsafe.dart';
 
@@ -63,9 +64,16 @@ class _HomeState extends State<Home> {
       itemCount: channels.length,
       itemBuilder: (context, index) {
         final channel = channels[index];
-        log('Channel: ${channel.attributes}');
         return Card(
           child: ListTile(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoScreen(
+                  url: channel.link,
+                ),
+              ),
+            ),
             title: Text(channel.title),
           ),
         );
